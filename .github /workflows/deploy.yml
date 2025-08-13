@@ -1,0 +1,13 @@
+name: Deploy to S3
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.0
+      - run: terraform init
+      - run: terraform apply -auto-approve
