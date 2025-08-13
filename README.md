@@ -5,7 +5,7 @@ This repo deploys a static `index.html` site to an S3 **website** bucket using *
 ## Quick start
 
 1. **Create a new empty GitHub repo** and  push this project.
-2. In your repo, add GitHub **Secrets** (Settings → Secrets and variables → Actions → New repository secret):
+2. In your repo, add GitHub **Secrets** (Settings → Secrets and variables →  Actions → New repository secret):
    - `AWS_ACCESS_KEY_ID`
    - `AWS_SECRET_ACCESS_KEY`
    - `AWS_REGION` = `us-east-1` (or your region)
