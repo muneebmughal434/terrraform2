@@ -1,0 +1,45 @@
+name: Deploy to S3 with Terraform
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      TF_IN_AUTOMATION: "true"
+      # if you use var.aws_region in Terraform:
+      TF_VAR_aws_region: ${{ secrets.AWS_REGION }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.0
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Sanity check
+        run: aws sts get-caller-identity
+
+      - name: Terraform Init
+        run: terraform init -input=false -upgrade
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+
+      - name: Show website URL
+        if: success()
+        run: |
+          echo "### ✅ Deployed" >> $GITHUB_STEP_SUMMARY
+          echo "- Bucket: $(terraform output -raw bucket_name)" >> $GITHUB_STEP_SUMMARY
+          echo "- URL: $(terraform output -raw website_endpoint)" >> $GITHUB_STEP_SUMMARY
