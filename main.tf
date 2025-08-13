@@ -7,7 +7,7 @@ terraform {
 }
 
 provider "aws" {
-  region = var.aws_region   # if you don't have variables.tf, change to region = "us-east-1"
+  region = "us-east-1"   # if you don't have variables.tf, change to region = "us-east-1"
 }
 
 # Unique bucket name each run
